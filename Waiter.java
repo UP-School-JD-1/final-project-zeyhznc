@@ -8,7 +8,7 @@ import java.util.List;
 
 // Garsonun sipariş alma süreci.
 
-public class Waiter {
+public class Waiter implements Runnable {
 	List<WaiterOrderInfo> orders = Collections.synchronizedList(new ArrayList <> ());
 
 	public Waiter(int i) {
@@ -29,6 +29,12 @@ public class Waiter {
 		WaiterOrderInfo waiterOrderInfo = new WaiterOrderInfo(customer, foods);
 		orders.add(waiterOrderInfo);
 	}
+
+	@Override
+	public void run() {
+		// Waiter, Runnable implement ettiği için run metodunu override etmeli
+		
+	}
 	
 	
 	
@@ -36,4 +42,5 @@ public class Waiter {
 	
 
 
+}
 }
