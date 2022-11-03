@@ -34,8 +34,8 @@ public class Restaurant {
 	
 
 public static String[] NameofBeverages = {"Limonata", "IceTea", "Ayran", "Meyve Suyu", "Cola", "Gazoz", "Çay", "Türk kahvesi", "Mocha"};
-public static synchronized List<Beverages> orderBeverage(){
-	List<Beverages> beverage = new ArrayList<>();
+public static synchronized Collection<? extends OrderList> orderBeverage(){
+	Collection<? extends OrderList> beverage = new ArrayList<>();
 	
 	int amountOfBeverages = rand.nextInt(2); // Siparişde en çok 1 içecek olabilir.
 	 
@@ -45,8 +45,8 @@ public static synchronized List<Beverages> orderBeverage(){
 	
 	
 public static String[] NameOfFoods= {"Cajun", "Hamburger", "Pizza", "King Chicken Menu", "Izgara Köfte", "Tavuk Şiş", "Kasap Köfte"};
-public static synchronized List <Foods> orderFood(){
-	List<Foods> food = new ArrayList<>();
+public static synchronized Collection<? extends OrderList> orderFood(){
+	Collection<? extends OrderList> food = new ArrayList<>();
 	
 	int amountOfFoods = rand.nextInt(3); //Siparişte en çok 2 yemek olabilir.
 	
@@ -203,15 +203,12 @@ public void setHeadWaiterThread(Thread headWaiterThread) {
 		for (int i=1; i<= customers ; i++) {
 			
 			LinkedList<OrderList> order = new LinkedList<OrderList>();
-			order.add((OrderList) orderBeverage()); //orderBeverage metodunun return tipi OrderList olmadığı için burada OrderList'e cast ettim.
-			order.add((OrderList) orderFood()); //orderFood metodunun return tipi OrderList olmadığı için burada OrderList'e cast ettim.
+			order.addAll(orderBeverage());
+			order.addAll(orderFood()); 
 			
 			this.customer = new Customer(i,order);
 			customerQueue.add(customer);
-		
-//Restaurant class'ının instance'ları threadler tarafından execute edildiği için Runnable interface'ini implement ediyor olmaları gerekir.
-// O nedenle burada Runnable'a cast ettim.
-			this.customerThread = new Thread((Runnable) customer); 
+			this.customerThread = new Thread(customer); 
 			customerQueueThread.add(customerThread);
 			customerThread.start();
 		}
@@ -222,9 +219,7 @@ public void setHeadWaiterThread(Thread headWaiterThread) {
 		for (int i=1; i<=waiters; i++) {
 			this.waiter = new Waiter(i);
 			waiterQueue.add(waiter);
-//Restaurant class'ının instance'ları threadler tarafından execute edildiği için Runnable interface'ini implement ediyor olmaları gerekir.
-// O nedenle burada Runnable'a cast ettim.
-			this.waiterThread = new Thread ((Runnable) waiter);
+			this.waiterThread = new Thread (waiter);
 			waiterQueueThread.add(waiterThread);
 			waiterThread.start();
 		}
@@ -233,9 +228,7 @@ public void setHeadWaiterThread(Thread headWaiterThread) {
 		for (int i=1; i<= headWaiters; i++) {
 			this.headWaiter = new HeadWaiter(i);		
 			headWaiterQueue.add(headWaiter);
-//Restaurant class'ının instance'ları threadler tarafından execute edildiği için Runnable interface'ini implement ediyor olmaları gerekir.
-// O nedenle burada Runnable'a cast ettim.
-			this.headWaiterThread = new Thread((Runnable) headWaiter);
+			this.headWaiterThread = new Thread(headWaiter);
 			headWaiterThread.start();
 		}
 		
