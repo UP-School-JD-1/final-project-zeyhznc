@@ -13,7 +13,7 @@ import java.util.List;
   bu yemeklerin tüketilme süresi -> foodsToBeEaten
 */
 
-public class Customer {
+public class Customer implements Runnable {
 	private List<Foods> foodsToBeEaten = Collections.synchronizedList(new ArrayList<> ());
 	private boolean isOrderGiven;
 	
@@ -52,6 +52,12 @@ public class Customer {
 			initTime += food.getConsumptionTime();
 		}
 		return initTime;
+	}
+
+	@Override
+	public void run() {
+		// Customer, Runnable implement ettiği için run metodunu override etmeli
+		
 	}
 
 	
